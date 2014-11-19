@@ -1,0 +1,39 @@
+body {
+  background: #123;
+}
+
+.picture-preview {
+  display: block;
+  position: relative;
+  
+  background: #9CCEF4;
+  margin-left: auto;
+  margin-right: auto;
+  
+  margin-top: 30px;
+  max-width: 80%;
+  height: 300px;
+  
+  border-radius: 2px;
+  
+  box-shadow: 0 0 2em rgba(173, 214, 237, 0.4);
+}
+
+/* should be translucent and when focused get 100% colored */
+.picture-info {
+  background-color: snow;
+  
+  width: 100%;
+  height: 30px;
+  
+  position: absolute;
+  bottom: 0;
+}
+
+.red {
+  color: red;
+}
+
+.preview {
+  max-width: 100%;
+}
