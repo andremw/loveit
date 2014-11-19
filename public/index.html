@@ -24,12 +24,12 @@
 
                 fileReader.onload = function (event) {
                     var picsSection = document.getElementById('pics');
-
                     var newImg = document.createElement('img');
+                    var newPicDiv = document.createElement('div');
+                    
                     newImg.classList.add('picPreview');
                     newImg.src = event.target.result;
 
-                    var newPicDiv = document.createElement('div');
                     newPicDiv.appendChild(newImg);
 
                     picsSection.insertBefore(newPicDiv, picsSection.firstChild);
