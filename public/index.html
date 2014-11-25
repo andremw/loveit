@@ -3,15 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Loveit!</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <section id="pics">
+    <section class="content">
+        <!-- a file upload input must be available in the top -->
+        <input type="file" id="fileInput" />
 
-    </section>
-
-    <input type="file" id="fileInput">
-
-    <script>
+        <article id="pictures-box">
+            <!-- each uploaded image will be shown inside picture-preview articles -->
+            <article class="picture-preview">
+                <img src="https://www.americarisingpac.org/wp-content/uploads/2014/08/chicken.jpg" alt="chicken" class="preview"/>
+                <!-- the pic-info will show information about the author [and a brief description] -->
+                <div class="picture-info">
+                    <span class="picture-author">
+                        andremw
+                    </span>
+                    <span class="picture-date">
+                        19/11/2014
+                    </span>
+                    <i class="red fa fa-heart"></i>
+                </div>
+            </article>
+        </article>
+    </section
+>
+    <script async>
         (function() {
             var fileInput = document.getElementById('fileInput');
 
@@ -23,16 +40,18 @@
                 fileReader.readAsDataURL(this.files[0]);
 
                 fileReader.onload = function (event) {
-                    var picsSection = document.getElementById('pics');
+
+                    // TODO: use a template engine
+                    var picsSection = document.getElementById('pictures-box');
                     var newImg = document.createElement('img');
-                    var newPicDiv = document.createElement('div');
-                    
-                    newImg.classList.add('picPreview');
+                    var newPicSection = document.createElement('section');
+
+                    newImg.classList.add('picture-preview');
                     newImg.src = event.target.result;
 
-                    newPicDiv.appendChild(newImg);
+                    newPicSection.appendChild(newImg);
 
-                    picsSection.insertBefore(newPicDiv, picsSection.firstChild);
+                    picsSection.insertBefore(newPicSection, picsSection.firstChild);
                 }
             }
 
