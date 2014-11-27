@@ -4,26 +4,27 @@
     <meta charset="UTF-8">
     <title>Loveit!</title>
     <link rel="stylesheet" href="style.css">
-    
+
 </head>
 <body>
     <section class="content">
         <!-- a file upload input must be available in the top -->
         <input type="file" id="fileInput" />
 
-        <article id="pictures-box">
+        <article id="pictures-boxes">
             <!-- each uploaded image will be shown inside picture-preview articles -->
-            <article class="picture-preview">
+            <article class="picture-box">
                 <img src="https://www.americarisingpac.org/wp-content/uploads/2014/08/chicken.jpg" alt="chicken" class="preview"/>
                 <!-- the pic-info will show information about the author [and a brief description] -->
                 <div class="picture-info">
-                    <span class="picture-author">
+                    <!--<span class="picture-author">
                         andremw
                     </span>
                     <span class="picture-date">
                         19/11/2014
-                    </span>
-                    <i class="red fa fa-heart"></i>
+                    </span>-->
+                    <span class="likes"></span>
+                    <button class="empty heart"></button>
                 </div>
             </article>
         </article>

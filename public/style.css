@@ -2,7 +2,7 @@ body {
   background: #123;
 }
 
-.picture-preview {
+.picture-box {
   overflow: hidden;
 
   display: block;
@@ -22,7 +22,7 @@ body {
   box-shadow: 0 0 2em rgba(173, 214, 237, 0.4);
 }
 
-.picture-preview img {
+.picture-box img {
   min-height: 100%;
 }
 
@@ -47,4 +47,22 @@ body {
 
 .preview {
   max-width: 100%;
+}
+
+.heart {
+  border: 0;
+  outline: 0;
+
+  cursor: pointer;
+
+  width: 16px;
+  height: 16px;
+}
+
+.empty {
+  background: url("../images/empty-heart.svg");
+}
+
+.full {
+  background: url("../images/heart.svg");
 }
