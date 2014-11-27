@@ -6,6 +6,18 @@ var express = require('express'),
     server = null,
     uploadedImages = null;
 
+var findPicBySrc = function (src) {
+  var len = uploadedImages.length,
+      uploadedPic = null;
+
+  for (var i = 0; i < len; i++) {
+    uploadedPic = uploadedImages[i];
+    if (uploadedPic.src === src) {
+      return uploadedPic;
+    }
+  }
+}
+
 server = app.listen(port, function() {
   console.log('Server listening at port %d', port);
 });
@@ -17,30 +29,37 @@ app.use(express.static(__dirname + '/public'));
 
 io.on('connection', function (socket) {
 
-  // whenever a user uploads a new image
-  socket.on('new image', function (data) {
-
-    var newImg = uploadedImages[uploadedImages.indexOf(data)];
-    if (newImg) {
-      newImg.likes++;
-    } else {
-      newImg = {
-        likes: data.likes,
-        src: data.src
-      };
-      uploadedImages.unshift(newImg);
-    }
-
   // must show all uploaded images to every new user
-    // if (!uploadedImages) uploadedImages = [data];
-    // else {
-    //   if (uploadedImages.indexOf(data) === -1) {
-    //     uploadedImages.push(data);
-    //   }
-    // }
 
-    // send the image to all users
-    socket.broadcast.emit('new image', data);
+  // whenever a user uploads a new image
+  socket.on('new image', function (picDataSrc) {
+
+    if (!uploadedImages) uploadedImages = [];
+
+    var newImg = {
+      likes: 0,
+      src: picDataSrc
+    };
+
+    uploadedImages.unshift(newImg);
+
+    // send the image to all users. No need to pass things other than pic src
+    socket.broadcast.emit('new image', picDataSrc);
+
+  });
+
+  socket.on('liked pic', function(picDataSrc) {
+    console.log('new pic liked!');
+
+    var img = findPicBySrc(picDataSrc);
+    if (img) {
+      img.likes++;
+
+      // need to pass the src and the likes so that the browser can update the #
+      // of likes.
+      // TODO: use ID to identify the images both in the browser and in the server
+      socket.broadcast.emit('liked pic', img);
+    }
 
   });
 

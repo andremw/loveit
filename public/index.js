@@ -85,8 +85,12 @@
 
   fileInput.addEventListener('change', handleNewFile, false);
 
-  socket.on('new image', function (data) {
-    addNewImage(data, null);
+  socket.on('new image', function (newImg) {
+    addNewImage(newImg, null);
+  });
+
+  socket.on('liked pic', function (likedPic) {
+    console.log('some user just liked a image!');
   });
 
   heartBtns = document.querySelectorAll('.heart');
