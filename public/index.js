@@ -62,7 +62,12 @@
       numOfLikes++;
     }
 
+    likeLabel.textContent = numOfLikes > 1 ? (numOfLikes + ' likes') : (1 + ' like');
+
     socket.emit('liked pic', this.parentElement.parentElement.firstElementChild.src);
+
+    likeLabel = null;
+    numOfLikes = null;
   };
 
   createPicInfo = function() {
