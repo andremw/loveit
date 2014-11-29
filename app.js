@@ -41,7 +41,10 @@ app.use(express.static(__dirname + '/public'));
 io.on('connection', function (socket) {
 
   // send all uploaded images to every new user
-  socket.emit('all pics', uploadedPics);
+  //socket.emit('all pics', uploadedPics);
+  for (var i = 0; i < uploadedPics.length; i++) {
+    socket.emit('new image', uploadedPics[i]);
+  }
 
   /**
    * Whenever a user uploads a new picture, the server will execute the anonymous
