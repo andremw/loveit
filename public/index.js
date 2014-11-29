@@ -49,8 +49,10 @@
     newPicPreview.appendChild(newImg);
     newPicPreview.appendChild(createPicInfo(data.likes));
 
-
     picsSection.insertBefore(newPicPreview, picsSection.firstChild);
+
+    picsSection = null;
+    newPicPreview = null;
 
     return newImg;
   };
@@ -130,6 +132,9 @@
     infoDiv.classList.add('picture-info');
     infoDiv.appendChild(labelLikes);
     infoDiv.appendChild(heart);
+
+    labelLikes = null;
+    heart = null;
 
     return infoDiv;
   };
