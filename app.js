@@ -4,7 +4,7 @@ var express = require('express'),
     port = process.env.PORT || 5000,
     usernames = null,
     server = null,
-    uploadedPics = null;
+    uploadedPics = [];
 
 /**
  * Try to find a picture by it's source (base64).
