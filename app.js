@@ -1,7 +1,7 @@
 var express = require('express'),
     app = express(),
     io = null,
-    port = 3000,
+    port = process.env.PORT || 5000,
     usernames = null,
     server = null,
     uploadedPics = null;
