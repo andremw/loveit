@@ -60,9 +60,9 @@ body {
 }
 
 .empty {
-  background: url("empty-heart.svg");
+  background: url("../empty-heart.svg");
 }
 
 .full {
-  background: url("heart.svg");
+  background: url("../heart.svg");
 }
