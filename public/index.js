@@ -1,8 +1,12 @@
 (function (window, document, undefined) {
 
+  // the lib tries to connect to the socket, if it fails it keeps trying
   var socket = io('http://localhost:3000'),
       fileInput = document.getElementById('fileInput');
+
   var heartBtns = null,
+
+      // the number of heart btns in the app (equal to the number of pics)
       heartBtnsLen = null;
 
   // functions
@@ -12,6 +16,19 @@
       createPicInfo = null,
       incrementLikeLabel = null;
 
+  /**
+   * Adds a new image to the page.
+   * @param {object} data  An object that contains the number of likes the pic
+   * has and the base64-encoded string that corresponds to the picture and
+   * is used by the browser to render it. This parameter will be null when
+   * the picture comes from the file input.
+   *
+   * @param {Event} The onload event. It will be null when the picture comes
+   * from the server. When it's not null, we know that the picture has been
+   * uploaded by the current user.
+   *
+   * TODO: use a template engine
+   */
   addNewImage = function(data, event) {
 
     if (!data) {
@@ -21,7 +38,6 @@
       };
     }
 
-    // TODO: use a template engine
     var picsSection = document.getElementById('pictures-boxes');
     var newImg = document.createElement('img');
     var newPicPreview = document.createElement('article');
@@ -39,6 +55,12 @@
     return newImg;
   };
 
+  /**
+   * It handles a new file whenever the user uploads something in the file input.
+   * Also sends an event to the server indicating that a new picture has been
+   * uploaded, so that the server can broadcast it to every connected user.
+   * @return {void}
+   */
   handleNewFile = function() {
     var fileReader = new FileReader();
 
@@ -48,17 +70,25 @@
 
       var newImg = addNewImage(null, event);
 
+      // Here the event is sent to the server, passing the picture source
       socket.emit('new image', newImg.src);
 
       newImg = null;
     }
   };
 
+  /**
+   * It is executed whenever the user likes a picture. Then it sends an 'event'
+   * to the server indicating that the picture has been liked, so that the server
+   * can broadcast it to every connected user.
+   * @param  {Event} event The click event
+   * @return {void}
+   */
   likeEvent = function(event) {
 
+    // Avoid more than 1 like from the user to the same picture
     if (!this.classList.contains('full')) {
 
-      // this refers to the heart button that was clicked
       this.classList.remove('empty');
       this.classList.add('full');
 
@@ -66,22 +96,32 @@
 
       incrementLikeLabel(likeLabel);
 
+      // Event sent to the server
       socket.emit('liked pic', this.parentElement.parentElement.firstElementChild.src);
 
       likeLabel = null;
     }
   };
 
+  /**
+   * The bar with the pic info is created. It's executed for every new picture
+   * @param  {int} likes The number of likes the picture has.
+   * @return {Div element} infoDiv The created DIV
+   */
   createPicInfo = function(likes) {
     var labelLikes = document.createElement('span'),
         heart = document.createElement('button'),
         infoDiv = document.createElement('div');
 
     labelLikes.classList.add('likes');
+
+    // If the picture already has a like (i.e., the picture comes from the server
+    // and have been liked)
     if (likes) {
       incrementLikeLabel(labelLikes, likes);
     }
 
+    // add a empty heart, because the current user has not yet liked it
     heart.classList.add('empty');
     heart.classList.add('heart');
 
@@ -116,6 +156,12 @@
 
   fileInput.addEventListener('change', handleNewFile, false);
 
+  /**
+   * Whenever a new image is uploaded by other user, the server sends an event
+   * to the client so that it can update the page
+   * @param  {object} newImg The uploaded image
+   * @return {void}
+   */
   socket.on('new image', function (newImg) {
     addNewImage(newImg, null);
   });
@@ -130,7 +176,7 @@
 
     /**
      * FIX: it shouldn't let duplicate images have its likes incremented as well,
-     * but by getting the picture by its source it can happen (I guess so)
+     * but by getting the picture by its source it can happen (I guess so lol)
      */
     var pic = document.querySelector('img[src="' + likedPic.src + '"]');
 
@@ -141,19 +187,25 @@
     likeLabel = null;
     pic = null;
 
-    console.log('some user just liked a image!');
   });
 
+  /**
+   * When the user connects to the server, the latter sends to the former all
+   * the already uploaded pictures that are in memory
+   * @param  {Array} pics An array with all the pictures already uploaded
+   * @return {void}
+   */
   socket.on('all pics', function (pics) {
     if (pics) {
       for (var i = 0; i < pics.length; i++) {
         addNewImage(pics[i]);
       }
     }
-  })
+  });
 
   heartBtns = document.querySelectorAll('.heart');
   heartBtnsLen = heartBtns.length;
+  // attach to every heart the click event
   for (var i = 0; i < heartBtnsLen; i++) {
     heartBtns[i].addEventListener('click', likeEvent);
   }
