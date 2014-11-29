@@ -1,7 +1,7 @@
 (function (window, document, undefined) {
 
   // the lib tries to connect to the socket, if it fails it keeps trying
-  var socket = io(window.location.hostname, {secure: true}),
+  var socket = io((window.location.hostname || 'http://localhost:5000')),
       fileInput = document.getElementById('fileInput');
 
   var heartBtns = null,
