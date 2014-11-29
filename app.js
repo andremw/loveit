@@ -9,7 +9,7 @@ var express = require('express'),
 /**
  * Try to find a picture by it's source (base64).
  * @param  {string} src A base64 encoded image
- * @return {}     [description]
+ * @return {void}     [description]
  */
 var findPicBySrc = function (src) {
   var len = uploadedPics.length,
