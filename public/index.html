@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Loveit!</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 <body>
     <section class="content">
@@ -13,23 +12,25 @@
 
         <article id="pictures-boxes">
             <!-- each uploaded image will be shown inside picture-preview articles -->
-            <article class="picture-box">
-                <img src="https://www.americarisingpac.org/wp-content/uploads/2014/08/chicken.jpg" alt="chicken" class="preview"/>
-                <!-- the pic-info will show information about the author [and a brief description] -->
-                <div class="picture-info">
-                    <!--<span class="picture-author">
-                        andremw
-                    </span>
-                    <span class="picture-date">
-                        19/11/2014
-                    </span>-->
-                    <span class="likes"></span>
-                    <button class="empty heart"></button>
-                </div>
-            </article>
+            <script id="picbox-template" type="text/x-handlebars-template">
+                <article class="picture-box">
+                    <img src="{{imgsource}}" alt="chicken" class="preview"/>
+                    <!-- the pic-info will show information about the author [and a brief description] -->
+                    <div class="picture-info">
+                        <!--<span class="picture-author">
+                            andremw
+                        </span>
+                        <span class="picture-date">
+                            19/11/2014
+                        </span>-->
+                        <span class="likes">{{likes}}</span>
+                        <button class="empty heart"></button>
+                    </div>
+                </article>
+            </script>
         </article>
     </section>
-
+    <script src="./libs/handlebars.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
     <script src="index.js"></script>
 </body>

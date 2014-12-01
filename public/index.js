@@ -1,4 +1,4 @@
-(function (window, document, undefined) {
+(function (Handlebars, window, document, undefined) {
 
   // the lib tries to connect to the socket, if it fails it keeps trying
   var socket = io((window.location.hostname || 'http://localhost:5000')),
@@ -13,8 +13,8 @@
   var addNewImage = null,
       handleNewFile = null,
       likeEvent = null,
-      createPicInfo = null,
-      incrementLikeLabel = null;
+      incrementLikeLabel = null,
+      formatLikeLabel = null;
 
   /**
    * Adds a new image to the page.
@@ -26,8 +26,6 @@
    * @param {Event} The onload event. It will be null when the picture comes
    * from the server. When it's not null, we know that the picture has been
    * uploaded by the current user.
-   *
-   * TODO: use a template engine
    */
   addNewImage = function(data, event) {
 
@@ -38,22 +36,19 @@
       };
     }
 
+    var template = Handlebars.compile(document.getElementById('picbox-template').innerHTML);
+    var likesno = '';
+    if (data.likes) {
+      likesno = formatLikeLabel(data.likes);
+    }
+    var html = template({imgsource: data.src, likes: likesno});
+
     var picsSection = document.getElementById('pictures-boxes');
-    var newImg = document.createElement('img');
-    var newPicPreview = document.createElement('article');
-
-    newImg.classList.add('preview');
-    newImg.src = data.src;
-
-    newPicPreview.classList.add('picture-box');
-    newPicPreview.appendChild(newImg);
-    newPicPreview.appendChild(createPicInfo(data.likes));
-
-    picsSection.insertBefore(newPicPreview, picsSection.firstChild);
+    picsSection.insertAdjacentHTML('afterbegin', html);
+    picsSection.getElementsByClassName('heart')[0].addEventListener('click', likeEvent);
+    var newImg = picsSection.getElementsByTagName('img')[0];
 
     picsSection = null;
-    newPicPreview = null;
-
     return newImg;
   };
 
@@ -106,43 +101,9 @@
   };
 
   /**
-   * The bar with the pic info is created. It's executed for every new picture
-   * @param  {int} likes The number of likes the picture has.
-   * @return {Div element} infoDiv The created DIV
-   */
-  createPicInfo = function(likes) {
-    var labelLikes = document.createElement('span'),
-        heart = document.createElement('button'),
-        infoDiv = document.createElement('div');
-
-    labelLikes.classList.add('likes');
-
-    // If the picture already has a like (i.e., the picture comes from the server
-    // and have been liked)
-    if (likes) {
-      incrementLikeLabel(labelLikes, likes);
-    }
-
-    // add a empty heart, because the current user has not yet liked it
-    heart.classList.add('empty');
-    heart.classList.add('heart');
-
-    heart.addEventListener('click', likeEvent);
-
-    infoDiv.classList.add('picture-info');
-    infoDiv.appendChild(labelLikes);
-    infoDiv.appendChild(heart);
-
-    labelLikes = null;
-    heart = null;
-
-    return infoDiv;
-  };
-
-  /**
    * Increment the number of likes by 1, if the numOfLikes is not specified
    * @param  {Span element} likeLabel  The element that shows the # of likes
-   * @param  {int} numOfLikes The # of likes the image already have
+   * @param  {Number} numOfLikes The # of likes the image already have
    * @return {void}
    */
   incrementLikeLabel = function(likeLabel, numOfLikes) {
@@ -156,7 +117,19 @@
       }
 
     }
-    likeLabel.textContent = numOfLikes > 1 ? (numOfLikes + ' likes') : (1 + ' like');
+    likeLabel.textContent = formatLikeLabel(numOfLikes);
+  };
+
+  /**
+   * Format the number of likes that will be shown in the picture info, besides the heart button.
+   * @param  {Number} likesno The number of likes the picture has
+   * @return {String}         'n like[s]'
+   */
+  formatLikeLabel = function (likesno) {
+    if (isNaN(likesno)) throw new Error('likesno is not a number!');
+    return likesno > 1
+      ? (likesno + ' likes')
+      : ('1 like');
   }
 
   fileInput.addEventListener('change', handleNewFile, false);
@@ -185,7 +158,7 @@
      */
     var pic = document.querySelector('img[src="' + likedPic.src + '"]');
 
-    var likeLabel = pic.nextSibling.firstChild;
+    var likeLabel = pic.nextElementSibling.firstElementChild;
 
     incrementLikeLabel(likeLabel);
 
@@ -215,4 +188,4 @@
     heartBtns[i].addEventListener('click', likeEvent);
   }
 
-}(window, document));
+}(Handlebars, window, document));
